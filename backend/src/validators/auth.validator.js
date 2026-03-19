@@ -36,12 +36,11 @@ export const registerValidator = [
 
 
 export const resendEmailValidator = [
-  body('email')
+  body('identifier')
     .trim()
     .notEmpty().withMessage('Email is required')
-    .isEmail()
-    .withMessage('Invalid email format')
-    .normalizeEmail(),
+    .withMessage('Invalid email format'),
+
 
     handleValidationErrors
 ];

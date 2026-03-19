@@ -98,7 +98,7 @@ export const verifyEmailController = asyncWrapper(async(req,res)=>{
         <div class="container">
           <h1>✓ Email Already Verified</h1>
           <p>Your email has already been verified. You can log in to your account.</p>
-          <a href="http://localhost:3000/api/auth/login" class="button">Go to Login</a>
+          <a href="http://localhost:5173/auth/login" class="button">Go to Login</a>
         </div>
       </body>
     </html>
@@ -133,7 +133,7 @@ const html =
       <h1>✓ Email Verified Successfully</h1>
       <p>Your email has been verified and your account is now active.</p>
       <p>You can now log in and access all features.</p>
-      <a href="http://localhost:3000/api/auth/login" class="button">Go to Login</a>
+      <a href="http://localhost:5173/auth/login" class="button">Go to Login</a>
     </div>
   </body>
 </html>` 
@@ -148,14 +148,22 @@ res.send(html)
 
 
 export const resendEmailController = asyncWrapper(async(req,res)=>{
-  const {email} = req.body;
-  const user = await userModel.findOne({email});
+  console.log('heli')
+  const {identifier} = req.body;
+
+  const user = await userModel.findOne({
+    $or:[
+      {username:identifier},
+      {email:identifier}
+    ]
+  });
 
   if(!user){
     throw new AppError("User not found",404);
   } else if(user.verified){
     throw new AppError("Email is already verified",400);
   }
+
 
   const token = crypto.randomBytes(32).toString("hex");
 
@@ -164,12 +172,12 @@ export const resendEmailController = asyncWrapper(async(req,res)=>{
   emailVerificationTokenExpires:Date.now()+3600000 /** token will expire after 1 hour */
   },{new:true})
 
-   const verifyLink = `${process.env.FRONTEND_URL}/api/auth/verify-email?token=${token}&email=${email}`;
+   const verifyLink = `${process.env.FRONTEND_URL}/api/auth/verify-email?token=${token}&email=${user.email}`;
 
 
   sendEmail(
    {
-    to:email,
+    to:user.email,
     subject:"welcome to CodeForge",
     text:"please verify your email",
     html:`

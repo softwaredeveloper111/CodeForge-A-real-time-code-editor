@@ -1,9 +1,19 @@
-import React from 'react'
+import React, { useEffect } from "react";
+import AppRouter from "./AppRouter";
+import useAuth from "./features/auth/hooks/useAuth";
 
 const App = () => {
-  return (
-    <div>App</div>
-  )
-}
+  const { handleGetme } = useAuth();
 
-export default App
+  useEffect(() => {
+    handleGetme();
+  }, []);
+
+  return (
+    <div className="app">
+      <AppRouter />
+    </div>
+  );
+};
+
+export default App;
