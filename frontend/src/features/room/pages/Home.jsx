@@ -9,6 +9,18 @@ const Home = () => {
   const { handleCreateRoom } = useRoom();
   const [openModal, setOpenModal] = useState(false);
 
+  const handleSoloSession = async () => {
+  const res = await handleCreateRoom({
+    name: `Solo-${user.username}`,
+    description: "Solo coding session",
+    language: "javascript",
+  });
+
+  if (res.success) {
+    navigate(`/room/${res.roomId}`); 
+  }
+};
+
   return (
     <div className="min-h-screen bg-[#070d1f] text-white relative overflow-hidden">
       {/* Background blobs */}

@@ -79,3 +79,19 @@ export const leaveRoomApi = async (roomId) => {
     throw error;
   }
 };
+
+
+
+
+
+export const deleteRoomApi = async(roomId)=>{
+  try {
+
+    const response = await instance.delete(`/api/room/shutdown/${roomId}`)
+    return response.data
+    
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}

@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid'
 
 export const createRoomController = asyncWrapper(async(req,res)=>{
   
-  const {name , description, language} = req.body
+  const {name , description, language, isSolo} = req.body
   const userId = req.user.id;
   
   const room = await roomModel.create({

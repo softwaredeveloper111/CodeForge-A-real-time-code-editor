@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { createRoomApi , joinRoomApi , UserRoomListApi ,leaveRoomApi ,getRoomApi } from "../services/room.api";
+import { createRoomApi , joinRoomApi , UserRoomListApi ,leaveRoomApi ,getRoomApi ,deleteRoomApi} from "../services/room.api";
 import {
   setRoom,
   setLoading,
@@ -102,7 +102,7 @@ const   handleUserRoomList = async()=>{
 
 
 
- const handleLeaveRoom = async (roomId) => {
+ const handleLeaveRoom = async (roomId)=> {
   try {
     dispatch(setLoading(true));
     dispatch(setError(null));
@@ -122,6 +122,24 @@ const   handleUserRoomList = async()=>{
 
 
 
+const handledeleteRoom = async(roomId)=>{
+  try {
+    dispatch(setLoading(true));
+    dispatch(setError(null));
+    await deleteRoomApi(roomId);
+    dispatch(clearRoom());
+    return { success: true ,message:"room deleted successfuly" };
+  } catch (error) {
+     const message = error?.response?.data?.message || "Leave failed";
+    dispatch(setError(message));
+    return { success: false, message };
+  }
+  finally{
+      dispatch(setLoading(false));
+  }
+}
+
+
 
 
 
@@ -134,7 +152,8 @@ const   handleUserRoomList = async()=>{
     handleCreateRoom,
     handleJoinRoom,
     handleUserRoomList,
-    handleLeaveRoom
+    handleLeaveRoom,
+    handledeleteRoom
   };
 };
 

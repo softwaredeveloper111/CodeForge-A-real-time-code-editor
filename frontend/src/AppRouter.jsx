@@ -6,6 +6,8 @@ import GuestRoute from "./features/auth/components/GuestRoute";
 import Home from "./features/room/pages/Home";
 import Room from "./features/room/pages/Room";
 import MyRooms from "./features/room/pages/MyRoom";
+import SoloSession from "./features/room/pages/SoloSession";
+
 
 const AppRouter = () => {
   return (
@@ -56,6 +58,17 @@ const AppRouter = () => {
     </Protected>
   }
 />
+
+
+   <Route
+  path="/user/works"
+  element={
+    <Protected>
+      <SoloSession />
+    </Protected>
+  }
+/>
+
 
       {/* Catch-all → redirect to home (Protected will handle from there) */}
       <Route path="*" element={<Navigate to="/" replace />} />

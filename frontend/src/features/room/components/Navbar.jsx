@@ -15,7 +15,11 @@ const Navbar = () => {
           </a>
 
           <Link to="/my-rooms" className="text-[#dfe4fe]/60 hover:text-white">
-            My Rooms
+             Rooms
+          </Link>
+    
+          <Link to="/user/works" className="text-[#dfe4fe]/60 hover:text-white">
+            works
           </Link>
 
           

@@ -47,6 +47,11 @@ const roomSchema = new mongoose.Schema({
   isActive:{
     type:Boolean,
     default:true,
+  },
+
+  isSolo: { 
+    type: Boolean, 
+    default: false 
   }
 
 },{timestamps:true})
