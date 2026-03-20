@@ -1,7 +1,7 @@
 import { Router } from "express";
 import identifyingUser  from "../middlewares/auth.middleware.js";
-import { createRoomController ,joinRoomController ,getRoomController ,leaveRoomController ,getMyRoomsConroller } from "../controllers/room.controller.js";
-
+import { createRoomController ,joinRoomController ,getRoomController ,leaveRoomController ,deleteRoomController ,getMyRoomsConroller } from "../controllers/room.controller.js";
+import { roomCreateValidation } from "../validators/room.validator.js";
 
 
 
@@ -19,7 +19,7 @@ const roomRouter = Router();
  * @description   user can create a new room
  */
 
-roomRouter.post("/" , identifyingUser , createRoomController )
+roomRouter.post("/" , roomCreateValidation , identifyingUser , createRoomController )
 
 
 
@@ -29,6 +29,18 @@ roomRouter.post("/" , identifyingUser , createRoomController )
  * @description   user can join a room
  */
 roomRouter.post("/join/:roomId", identifyingUser , joinRoomController);
+
+
+
+
+
+/**
+ * @method   GET
+ * @route    /api/room/my/rooms
+ * @description   user can get all his rooms
+ */
+roomRouter.get("/my/rooms", identifyingUser, getMyRoomsConroller);
+
 
 
 
@@ -56,12 +68,14 @@ roomRouter.put("/leave/:roomId",identifyingUser, leaveRoomController);
 
 
 
-
 /**
- * @method   GET
- * @route    /api/room/my
+ * @method   DELETE
+ * @route    /api/room/shutdown/:roomId
+ * @description   only admin can delete the room (who created)
  */
-roomRouter.get("/my/rooms", identifyingUser, getMyRoomsConroller);
+
+roomRouter.delete("/shutdown/:roomId", identifyingUser ,deleteRoomController )
+
 
 
 

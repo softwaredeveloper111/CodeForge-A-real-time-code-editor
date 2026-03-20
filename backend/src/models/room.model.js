@@ -10,7 +10,19 @@ const roomSchema = new mongoose.Schema({
   },
   name:{
     type:String,
-    default: "Untitled Room",
+    required:[true, "room name must be required"],
+    minlength: [3, "room title must be at least 5 characters long"],
+    maxlength: [100, "room title must be at most 100 characters long"],
+
+
+  },
+  description:{
+    type:String,
+    trim:true,
+    minlength: [3, "room description must be at least 10 characters long"],
+    maxlength: [300, "room description must be at most 300 characters long"],
+    required:[true,"room description must be required"],
+    
   },
    createdBy:{
     type:mongoose.Schema.Types.ObjectId,
@@ -25,7 +37,7 @@ const roomSchema = new mongoose.Schema({
   ],
   language:{
     type:String,
-    default:"javascript"
+    default:"javascript",
   },
 
   code:{
@@ -37,7 +49,7 @@ const roomSchema = new mongoose.Schema({
     default:true,
   }
 
-})
+},{timestamps:true})
 
 
 const roomModel = mongoose.model("Room",roomSchema)

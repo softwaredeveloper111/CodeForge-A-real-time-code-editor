@@ -19,15 +19,15 @@ initSocket(server)
 
 
 /** application middleware */
-app.use(express.json());
-app.use(express.static("public"))
-app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
 }));
-app.use(morgan("dev"))
 app.use(cookieParser());
+app.use(express.json());
+app.use(express.static("public"))
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"))
 app.use('/api/auth', authRouter);
 app.use("/api/room",roomRouter)
 app.use("/api/messages",messageRouter )

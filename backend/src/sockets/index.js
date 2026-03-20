@@ -6,10 +6,11 @@ let io;
 
 export const initSocket = (server) => {
   io = new Server(server, {
-    cors: {
-      origin: "*",
-    },
-  });
+  cors: {
+    origin: "http://localhost:5173", // ✅ exact origin
+    credentials: true,               // ✅ yeh bhi add kar
+  },
+});
 
 
 
