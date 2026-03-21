@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useRoom from "../hooks/useRoom";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CreateRoomModal from "../components/CreateRoomModal";
 
@@ -19,14 +19,16 @@ const MyRooms = () => {
 
   const fetchRooms = async () => {
     const res = await handleUserRoomList();
-    if (res) setRooms(res);
+    if (res) {
+      // ✅ Only collaborative rooms (filter out solo sessions)
+      setRooms(res.filter((r) => r.isSolo === false || r.isSolo === undefined));
+    }
   };
 
   // ✅ Leave Room handler
   const onLeaveRoom = async (roomId) => {
     const res = await handleLeaveRoom(roomId);
     if (res.success) {
-      // UI se bhi remove karo, refetch ki zaroorat nahi
       setRooms((prev) => prev.filter((r) => r.roomId !== roomId));
     }
   };
@@ -194,7 +196,5 @@ const MyRooms = () => {
     </div>
   );
 };
-
-
 
 export default MyRooms;

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams,Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Editor from "@monaco-editor/react";
 
@@ -19,6 +19,7 @@ const Room = () => {
   const [code, setCode] = useState("// Start coding...");
   const [users, setUsers] = useState([]);
   const [language, setLanguage] = useState("javascript");
+  const [isSolo, setIsSolo] = useState(false);
 
   const isRemoteChange = useRef(false);
 
@@ -31,6 +32,7 @@ const Room = () => {
       if (res?.data?.participants) setUsers(res.data.participants);
       if (res?.data?.code)        setCode(res.data.code);
       if (res?.data?.language)    setLanguage(res.data.language);
+      if (res?.data?.isSolo !== undefined) setIsSolo(res.data.isSolo); // ✅ only new line
     };
     fetchRoom();
   }, [roomId]);
@@ -96,7 +98,7 @@ const Room = () => {
       {/* ── TOP BAR ── */}
       <div className="flex items-center justify-between px-4 py-2 bg-[#020617] border-b border-slate-800 shrink-0">
         <div className="flex items-center gap-3">
-          <span className="text-lg font-bold text-indigo-400">CodeForge</span>
+          <Link to="/" className="text-lg font-bold text-indigo-400">CodeForge</Link>
         </div>
 
         <button
@@ -118,34 +120,34 @@ const Room = () => {
       {/* ── MAIN AREA ── */}
       <div className="flex flex-1 overflow-hidden">
 
-        {/* LEFT SIDEBAR — users */}
-        <div className="w-56 bg-[#020617] p-4 border-r border-slate-800 flex flex-col shrink-0">
-          <Link to="/my-rooms" className="text-sm hover:text-green-400 duration-700 font-semibold text-white/50 uppercase tracking-widest mb-1">
-            Room
-          </Link>
-          <p className="text-xs text-white/30 font-mono break-all mb-6">{roomId}</p>
+        {/* LEFT SIDEBAR — only for collaborative rooms */}
+        {!isSolo && (
+          <div className="w-56 bg-[#020617] p-4 border-r border-slate-800 flex flex-col shrink-0">
+            <Link to="/my-rooms" className="text-sm hover:text-green-400 duration-700 font-semibold text-white/50 uppercase tracking-widest mb-1">
+              Room
+            </Link>
+            <p className="text-xs text-white/30 font-mono break-all mb-6">{roomId}</p>
 
-          <h3 className="text-xs text-white/40 uppercase tracking-widest mb-3">
-            Online
-          </h3>
-          <ul className="flex flex-col gap-3">
-            {users.map((u) => (
-              <li key={u._id} className="flex items-center gap-2">
-                <img
-                  src={u.avatar}
-                  alt={u.username}
-                  className="w-6 h-6 rounded-full object-cover border border-white/10"
-                />
-                <span className="text-sm text-white/70">{u.username}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+            <h3 className="text-xs text-white/40 uppercase tracking-widest mb-3">
+              Online
+            </h3>
+            <ul className="flex flex-col gap-3">
+              {users.map((u) => (
+                <li key={u._id} className="flex items-center gap-2">
+                  <img
+                    src={u.avatar}
+                    alt={u.username}
+                    className="w-6 h-6 rounded-full object-cover border border-white/10"
+                  />
+                  <span className="text-sm text-white/70">{u.username}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* EDITOR + OUTPUT PANEL */}
         <div className="flex-1 flex flex-col overflow-hidden">
-
-          {/* Monaco Editor */}
           <div className="flex-1 overflow-hidden">
             <Editor
               height="100%"
@@ -160,19 +162,19 @@ const Room = () => {
             />
           </div>
 
-          {/* Output Panel */}
           <OutputPanel
             output={output}
             isRunning={isRunning}
             error={error}
           />
-
         </div>
 
-        {/* RIGHT — CHAT PANEL */}
-        <div className="w-72 shrink-0">
-          <ChatPanel roomId={roomId} />
-        </div>
+        {/* RIGHT CHAT — only for collaborative rooms */}
+        {!isSolo && (
+          <div className="w-72 shrink-0">
+            <ChatPanel roomId={roomId} />
+          </div>
+        )}
 
       </div>
     </div>

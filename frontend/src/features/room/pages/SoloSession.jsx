@@ -1,71 +1,160 @@
-import React from "react";
-import { useNavigate,Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import useRoom from "../hooks/useRoom";
+import { toast } from "react-toastify";
 
-// ─── Static mock data ───────────────────────────────────────────────────────
-const MOCK_SESSIONS = [
-  {
-    id: "CF-8291",
-    name: "Solo-roko",
-    language: "JavaScript",
-    langColor: "indigo",
-    lastEdited: "2 hours ago",
-    codeLines: [
-      { parts: [{ color: "text-indigo-400", text: "const" }, { color: "text-slate-400", text: " sum = (a, b) => a + b;" }] },
-      { parts: [{ color: "text-slate-400", text: "console.log(sum(" }, { color: "text-purple-400", text: "10, 20" }, { color: "text-slate-400", text: "));" }] },
-    ],
-  },
-  {
-    id: "CF-4402",
-    name: "Backend-refactor",
-    language: "Go",
-    langColor: "purple",
-    lastEdited: "5 hours ago",
-    codeLines: [
-      { parts: [{ color: "text-purple-400", text: "func " }, { color: "text-indigo-400", text: "HandleRequest" }, { color: "text-slate-400", text: "(w http.ResponseWriter, r *http.Request) {" }] },
-      { parts: [{ color: "text-slate-400", text: '      fmt.Fprintf(w, ' }, { color: "text-emerald-400", text: '"Hello from CodeForge!"' }, { color: "text-slate-400", text: ")" }] },
-    ],
-  },
-  {
-    id: "CF-1198",
-    name: "Auth-logic",
-    language: "Python",
-    langColor: "emerald",
-    lastEdited: "yesterday",
-    codeLines: [
-      { parts: [{ color: "text-indigo-400", text: "def " }, { color: "text-emerald-400", text: "validate_token" }, { color: "text-slate-400", text: "(token: str):" }] },
-      { parts: [{ color: "text-purple-400", text: "      return " }, { color: "text-slate-400", text: 'jwt.decode(token, secret, algorithms=[' }, { color: "text-emerald-400", text: '"HS256"' }, { color: "text-slate-400", text: "])" }] },
-    ],
-  },
-];
+// ── Relative time formatter ───────────────────────────────────────────────────
+const timeAgo = (dateStr) => {
+  const now = Date.now();
+  const past = new Date(dateStr).getTime();
+  const diff = Math.floor((now - past) / 1000); // seconds
 
-// ─── Color maps ─────────────────────────────────────────────────────────────
-const langBadge = {
-  indigo: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
-  purple: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  emerald: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  if (diff < 60) return "just now";
+  if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} hour${Math.floor(diff / 3600) > 1 ? "s" : ""} ago`;
+  if (diff < 604800) return `${Math.floor(diff / 86400)} day${Math.floor(diff / 86400) > 1 ? "s" : ""} ago`;
+  return new Date(dateStr).toLocaleDateString();
 };
 
-const cardHover = {
-  indigo: "hover:border-indigo-500/30 group-hover:border-indigo-500/50 group-hover:shadow-[0_0_15px_rgba(163,166,255,0.15)]",
-  purple: "hover:border-purple-500/30 group-hover:border-purple-500/50 group-hover:shadow-[0_0_15px_rgba(193,128,255,0.15)]",
-  emerald: "hover:border-emerald-500/30 group-hover:border-emerald-500/50 group-hover:shadow-[0_0_15px_rgba(52,211,153,0.15)]",
+// ── Language config ───────────────────────────────────────────────────────────
+const LANG_CONFIG = {
+  javascript: {
+    color: "text-yellow-400",
+    badge: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+    glow: "group-hover:shadow-[0_0_15px_rgba(234,179,8,0.1)]",
+    border: "group-hover:border-yellow-500/40",
+    placeholder: [
+      [{ color: "text-yellow-400", text: "// Write your JavaScript here" }],
+      [{ color: "text-slate-400", text: 'console.log("Hello, World!");' }],
+    ],
+  },
+  python: {
+    color: "text-emerald-400",
+    badge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    glow: "group-hover:shadow-[0_0_15px_rgba(52,211,153,0.1)]",
+    border: "group-hover:border-emerald-500/40",
+    placeholder: [
+      [{ color: "text-emerald-400", text: "# Write your Python here" }],
+      [{ color: "text-slate-400", text: 'print("Hello, World!")' }],
+    ],
+  },
+  cpp: {
+    color: "text-indigo-400",
+    badge: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
+    glow: "group-hover:shadow-[0_0_15px_rgba(99,102,241,0.1)]",
+    border: "group-hover:border-indigo-500/40",
+    placeholder: [
+      [{ color: "text-indigo-400", text: "#include <iostream>" }],
+      [{ color: "text-slate-400", text: 'int main() { std::cout << "Hello!"; }' }],
+    ],
+  },
+  java: {
+    color: "text-orange-400",
+    badge: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+    glow: "group-hover:shadow-[0_0_15px_rgba(251,146,60,0.1)]",
+    border: "group-hover:border-orange-500/40",
+    placeholder: [
+      [{ color: "text-orange-400", text: "public class Main {" }],
+      [{ color: "text-slate-400", text: '  public static void main(String[] args) {}' }],
+    ],
+  },
 };
 
-const nameColor = {
-  indigo: "text-indigo-300",
-  purple: "text-purple-300",
-  emerald: "text-emerald-300",
+// ── Code Preview Lines ────────────────────────────────────────────────────────
+// Shows first 2 non-empty lines of saved code, or placeholder if empty
+const CodePreview = ({ code, language }) => {
+  const config = LANG_CONFIG[language] || LANG_CONFIG["javascript"];
+
+  if (!code || code.trim() === "" || code.trim() === "// Start coding...") {
+    // Show placeholder
+    return (
+      <div className="mt-4 p-4 bg-black/40 rounded-lg border border-slate-800/50">
+        {config.placeholder.map((line, i) => (
+          <code key={i} className="text-sm font-mono block truncate mt-1 first:mt-0 opacity-40 italic">
+            {line.map((part, j) => (
+              <span key={j} className={part.color}>{part.text}</span>
+            ))}
+          </code>
+        ))}
+      </div>
+    );
+  }
+
+  // Show first 2 non-empty lines of real saved code
+  const lines = code
+    .split("\n")
+    .map((l) => l.trimEnd())
+    .filter((l) => l.trim() !== "")
+    .slice(0, 2);
+
+  return (
+    <div className="mt-4 p-4 bg-black/40 rounded-lg border border-slate-800/50">
+      {lines.map((line, i) => (
+        <code key={i} className={`text-sm font-mono block truncate mt-1 first:mt-0 ${config.color}`}>
+          {line}
+        </code>
+      ))}
+    </div>
+  );
 };
 
-// ─── Sidebar ─────────────────────────────────────────────────────────────────
+// ── Session Card ──────────────────────────────────────────────────────────────
+const SessionCard = ({ room, onContinue }) => {
+  const config = LANG_CONFIG[room.language] || LANG_CONFIG["javascript"];
+
+  return (
+    <div
+      className={`group rounded-xl p-6 border border-white/[0.06] transition-all duration-300 ${config.border} ${config.glow}`}
+      style={{ background: "rgba(17,25,46,0.8)", backdropFilter: "blur(12px)" }}
+    >
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+
+        {/* Left — name + code preview */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-3 mb-1">
+            <h3 className={`text-xl font-bold truncate ${config.color}`}>
+              {room.name}
+            </h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500 shrink-0">
+              ID: {room.roomId}
+            </span>
+          </div>
+
+          <CodePreview code={room.code} language={room.language} />
+        </div>
+
+        {/* Right — badge + time + button */}
+        <div className="flex flex-col items-end gap-6 min-w-[140px] shrink-0">
+          <span className={`px-3 py-1 text-xs rounded-full border capitalize ${config.badge}`}>
+            {room.language === "cpp" ? "C++" : room.language.charAt(0).toUpperCase() + room.language.slice(1)}
+          </span>
+
+          <div className="flex flex-col items-end">
+            <p className="text-[11px] text-slate-500 mb-3">
+              Last edited: {timeAgo(room.updatedAt)}
+            </p>
+            <button
+              onClick={() => onContinue(room.roomId)}
+              className="flex items-center gap-2 px-5 py-2 bg-[#070d1f] hover:bg-[#222b47] text-slate-200 border border-slate-700 rounded-lg transition-all"
+            >
+              <span className="text-sm font-semibold">Continue</span>
+              <span className="text-sm">→</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+// ── Sidebar ───────────────────────────────────────────────────────────────────
 const Sidebar = () => (
   <aside className="fixed left-0 top-0 h-full w-20 flex flex-col items-center py-6 z-50 bg-[#11192e] shadow-2xl shadow-black/40">
-    {/* Logo */}
     <div className="mb-8 p-3 bg-indigo-500/10 rounded-xl">
       <span className="text-indigo-400 text-2xl font-black">{"</>"}</span>
     </div>
 
-    {/* Nav Icons */}
     <nav className="flex flex-col gap-6 items-center flex-1">
       {[
         { icon: "💻", label: "Editor", active: true },
@@ -89,93 +178,61 @@ const Sidebar = () => (
       ))}
     </nav>
 
-    {/* Bottom */}
     <div className="flex flex-col gap-2 items-center mt-auto w-full">
-      {/* Storage bar */}
       <div className="px-4 w-full flex flex-col items-center gap-2 mb-4">
         <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse" />
         <div className="h-24 w-1 bg-slate-800 rounded-full relative overflow-hidden">
           <div className="absolute bottom-0 w-full bg-indigo-500 h-[20%]" />
         </div>
       </div>
-
       <button className="group relative text-slate-500 hover:text-slate-300 p-3 w-20 flex justify-center hover:bg-[#222b47] transition-all">
         <span className="text-xl">❓</span>
         <span className="absolute left-full ml-4 px-2 py-1 bg-[#222b47] text-xs rounded opacity-0 group-hover:opacity-100 whitespace-nowrap z-50 pointer-events-none">Support</span>
-      </button>
-
-      <button className="group relative text-red-500 hover:text-red-400 p-3 w-20 flex justify-center hover:bg-red-500/10 transition-all">
-        <span className="text-xl">🚪</span>
-        <span className="absolute left-full ml-4 px-2 py-1 bg-[#222b47] text-xs rounded opacity-0 group-hover:opacity-100 whitespace-nowrap z-50 pointer-events-none">Sign Out</span>
       </button>
     </div>
   </aside>
 );
 
-// ─── Topbar ───────────────────────────────────────────────────────────────────
+// ── Topbar ────────────────────────────────────────────────────────────────────
 const Topbar = () => (
   <header className="flex justify-between items-center w-full px-8 h-16 border-b border-slate-800/50 bg-[#070d1f] sticky top-0 z-40">
     <div className="flex items-center gap-8 flex-1">
-      <Link to="/" className="text-xl font-black text-indigo-400 tracking-tight">CodeForge</Link>
+      <Link to="/" className="text-xl font-black text-indigo-400 tracking-tight">
+        CodeForge
+      </Link>
     </div>
-
   </header>
 );
 
-// ─── Session Card ─────────────────────────────────────────────────────────────
-const SessionCard = ({ session }) => {
-  const { name, id, language, langColor, lastEdited, codeLines } = session;
-
-  return (
-    <div
-      className={`group glass-card rounded-xl p-6 border border-white/[0.06] transition-all duration-300 ${cardHover[langColor]}`}
-      style={{ background: "rgba(17,25,46,0.8)", backdropFilter: "blur(12px)" }}
-    >
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-
-        {/* Left — name + code preview */}
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-1">
-            <h3 className={`text-xl font-bold ${nameColor[langColor]}`}>{name}</h3>
-            <span className="text-[10px] uppercase tracking-widest text-slate-500">ID: {id}</span>
-          </div>
-
-          <div className="mt-4 p-4 bg-black/40 rounded-lg border border-slate-800/50">
-            {codeLines.map((line, i) => (
-              <code key={i} className="text-sm font-mono block truncate mt-1 first:mt-0">
-                {line.parts.map((part, j) => (
-                  <span key={j} className={part.color}>{part.text}</span>
-                ))}
-              </code>
-            ))}
-          </div>
-        </div>
-
-        {/* Right — badge + time + button */}
-        <div className="flex flex-col items-end gap-6 min-w-[140px]">
-          <span className={`px-3 py-1 text-xs rounded-full border ${langBadge[langColor]}`}>
-            {language}
-          </span>
-
-          <div className="flex flex-col items-end">
-            <p className="text-[11px] text-slate-500 mb-3">Last edited: {lastEdited}</p>
-            <button
-              className={`flex items-center gap-2 px-5 py-2 bg-[#070d1f] hover:bg-[#222b47] text-slate-200 border border-slate-700 rounded-lg transition-all ${cardHover[langColor]}`}
-            >
-              <span className="text-sm font-semibold">Continue</span>
-              <span className="text-sm">→</span>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  );
-};
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
+// ── Main Page ─────────────────────────────────────────────────────────────────
 const SoloSessions = () => {
   const navigate = useNavigate();
+  const { handleUserRoomList } = useRoom();
+
+  const [rooms, setRooms] = useState([]);
+  const [fetchLoading, setFetchLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSoloRooms = async () => {
+      setFetchLoading(true);
+      const res = await handleUserRoomList();
+
+      if (Array.isArray(res)) {
+        // Filter only solo rooms
+        const soloRooms = res.filter((r) => r.isSolo === true);
+        // Sort by most recently updated
+        soloRooms.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        setRooms(soloRooms);
+      }
+      setFetchLoading(false);
+    };
+
+    fetchSoloRooms();
+  }, []);
+
+  const handleContinue = (roomId) => {
+    navigate(`/room/${roomId}`);
+  };
 
   return (
     <div className="flex min-h-screen overflow-hidden bg-[#070d1f] text-white">
@@ -184,7 +241,6 @@ const SoloSessions = () => {
       <main className="flex-1 ml-20 flex flex-col h-screen overflow-hidden">
         <Topbar />
 
-        {/* Canvas */}
         <div className="flex-1 overflow-y-auto p-8 lg:px-12 relative">
 
           {/* Page Header */}
@@ -197,34 +253,61 @@ const SoloSessions = () => {
                 Your personal scratchpads. Continue where you left off.
               </p>
             </div>
-
           </div>
+
+          {/* Loading */}
+          {fetchLoading && (
+            <div className="flex items-center justify-center mt-32">
+              <div className="w-8 h-8 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!fetchLoading && rooms.length === 0 && (
+            <div className="flex flex-col items-center justify-center mt-32 text-white/40 gap-4">
+              <span className="text-5xl">💻</span>
+              <p className="text-lg">No solo sessions yet</p>
+              <p className="text-sm">Go to Home and click "Start Solo Session"</p>
+              <Link
+                to="/"
+                className="mt-2 px-6 py-2 bg-indigo-500 hover:bg-indigo-400 text-white rounded-xl text-sm font-semibold transition"
+              >
+                Start Coding →
+              </Link>
+            </div>
+          )}
 
           {/* Session Cards */}
-          <div className="flex flex-col gap-6 max-w-5xl mx-auto">
-            {MOCK_SESSIONS.map((session) => (
-              <SessionCard key={session.id} session={session} />
-            ))}
+          {!fetchLoading && rooms.length > 0 && (
+            <div className="flex flex-col gap-6 max-w-5xl mx-auto">
+              {rooms.map((room) => (
+                <SessionCard
+                  key={room._id}
+                  room={room}
+                  onContinue={handleContinue}
+                />
+              ))}
 
-            {/* Storage card */}
-            <div
-              className="mt-12 p-8 rounded-xl flex flex-col md:flex-row items-center justify-between border border-dashed border-indigo-500/30"
-              style={{ background: "rgba(17,25,46,0.8)", backdropFilter: "blur(12px)" }}
-            >
-              <div className="flex items-center gap-6 mb-6 md:mb-0">
-                <div className="h-16 w-16 bg-[#222b47] rounded-2xl flex items-center justify-center text-3xl">
-                  ☁️
+              {/* Storage card */}
+              <div
+                className="mt-12 p-8 rounded-xl flex flex-col md:flex-row items-center justify-between border border-dashed border-indigo-500/30"
+                style={{ background: "rgba(17,25,46,0.8)", backdropFilter: "blur(12px)" }}
+              >
+                <div className="flex items-center gap-6 mb-6 md:mb-0">
+                  <div className="h-16 w-16 bg-[#222b47] rounded-2xl flex items-center justify-center text-3xl">
+                    ☁️
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-bold text-white">Running out of space?</h4>
+                    <p className="text-sm text-slate-400">0.8GB used of 10.0GB total capacity</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-lg font-bold text-white">Running out of space?</h4>
-                  <p className="text-sm text-slate-400">0.8GB used of 10.0GB total capacity</p>
-                </div>
+                <button className="px-8 py-3 bg-indigo-500 hover:bg-indigo-400 text-white font-bold rounded-xl transition-colors shadow-lg shadow-indigo-500/20">
+                  Upgrade Pro Plan
+                </button>
               </div>
-              <button className="px-8 py-3 bg-indigo-500 hover:bg-indigo-400 text-white font-bold rounded-xl transition-colors shadow-lg shadow-indigo-500/20">
-                Upgrade Pro Plan
-              </button>
             </div>
-          </div>
+          )}
 
           {/* BG blobs */}
           <div className="fixed top-1/4 -right-24 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full pointer-events-none z-0" />
