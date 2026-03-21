@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import useRoom from "../hooks/useRoom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import CreateRoomModal from "../components/CreateRoomModal";
 
 const MyRooms = () => {
   const { handleUserRoomList, handleLeaveRoom, handledeleteRoom } = useRoom();
   const [rooms, setRooms] = useState([]);
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
 
   // ✅ logged in user ka id
   const loggedInUserId = useSelector((state) => state.authentication.user?._id);
@@ -42,7 +44,7 @@ const MyRooms = () => {
 
       {/* SIDEBAR */}
       <aside className="w-64 bg-[#11192e] border-r border-white/10 p-6 hidden md:flex flex-col">
-        <h2 className="text-indigo-400 font-bold mb-6">Workspace</h2>
+        <Link className="text-indigo-400 text-xl font-bold mb-6">Workspace</Link>
 
         <div className="flex flex-col gap-4 text-white/60">
           <button className="text-indigo-400 text-left">Projects</button>
@@ -60,15 +62,15 @@ const MyRooms = () => {
         <div className="flex justify-between items-center mb-12">
           <div>
             <h1 className="text-5xl font-bold">My Rooms</h1>
-            <p className="text-white/60 mt-2 max-w-80">
+            <p className="text-white/60 mt-2 max-w-100">
               Resume your coding sessions or collaborate with your team in
               high-performance virtual environments.
             </p>
           </div>
 
           <button
-            onClick={() => navigate("/")}
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 font-semibold"
+            onClick={() => setOpenModal(true)}
+            className="px-6 py-3 cursor-pointer rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 font-semibold"
           >
             + Create Room
           </button>
@@ -158,14 +160,14 @@ const MyRooms = () => {
                       {isCreator ? (
                         <button
                           onClick={() => onShutdownRoom(room.roomId)}
-                          className="px-4 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm border border-red-500/20 transition"
+                          className="px-4 py-2 rounded-lg cursor-pointer bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm border border-red-500/20 transition"
                         >
                           🔴 Shutdown
                         </button>
                       ) : (
                         <button
                           onClick={() => onLeaveRoom(room.roomId)}
-                          className="px-4 py-2 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 text-sm border border-orange-500/20 transition"
+                          className="px-4 py-2 cursor-pointer rounded-lg bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 text-sm border border-orange-500/20 transition"
                         >
                           ↩ Leave
                         </button>
@@ -173,7 +175,7 @@ const MyRooms = () => {
 
                       <button
                         onClick={() => navigate(`/room/${room.roomId}`)}
-                        className="px-5 py-2 bg-[#222b47] rounded-lg hover:bg-white/10 flex items-center gap-2 text-sm"
+                        className="px-5 py-2 cursor-pointer bg-[#222b47] rounded-lg hover:bg-white/10 flex items-center gap-2 text-sm"
                       >
                         Join Room →
                       </button>
@@ -186,8 +188,13 @@ const MyRooms = () => {
           </div>
         )}
       </div>
+
+      <CreateRoomModal isOpen={openModal} onClose={() => setOpenModal(false)} />
+
     </div>
   );
 };
+
+
 
 export default MyRooms;

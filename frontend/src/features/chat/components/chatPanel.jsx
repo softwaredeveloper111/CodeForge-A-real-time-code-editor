@@ -59,7 +59,7 @@ const ChatPanel = ({ roomId }) => {
         />
         <button
           onClick={sendMessage}
-          className="px-3 py-2 bg-indigo-500 hover:bg-indigo-400 rounded-lg text-sm font-semibold transition-colors"
+          className="px-3 cursor-pointer py-2 bg-indigo-500 hover:bg-indigo-400 rounded-lg text-sm font-semibold transition-colors"
         >
           →
         </button>

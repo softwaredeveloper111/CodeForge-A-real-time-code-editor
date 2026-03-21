@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Editor from "@monaco-editor/react";
 
@@ -96,15 +96,13 @@ const Room = () => {
       {/* ── TOP BAR ── */}
       <div className="flex items-center justify-between px-4 py-2 bg-[#020617] border-b border-slate-800 shrink-0">
         <div className="flex items-center gap-3">
-          <span className="text-sm font-bold text-indigo-400">CodeForge</span>
-          <span className="text-xs text-white/30">|</span>
-          <span className="text-xs text-white/40 font-mono">{roomId}</span>
+          <span className="text-lg font-bold text-indigo-400">CodeForge</span>
         </div>
 
         <button
           onClick={handleRunCode}
           disabled={isRunning}
-          className="flex items-center gap-2 px-4 py-1.5 bg-green-500 hover:bg-green-400 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-semibold text-black transition-colors"
+          className="flex cursor-pointer items-center gap-2 px-4 py-1.5 bg-green-500 hover:bg-green-400 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-semibold text-black transition-colors"
         >
           {isRunning ? (
             <>
@@ -122,9 +120,9 @@ const Room = () => {
 
         {/* LEFT SIDEBAR — users */}
         <div className="w-56 bg-[#020617] p-4 border-r border-slate-800 flex flex-col shrink-0">
-          <h2 className="text-sm font-semibold text-white/50 uppercase tracking-widest mb-1">
+          <Link to="/my-rooms" className="text-sm hover:text-green-400 duration-700 font-semibold text-white/50 uppercase tracking-widest mb-1">
             Room
-          </h2>
+          </Link>
           <p className="text-xs text-white/30 font-mono break-all mb-6">{roomId}</p>
 
           <h3 className="text-xs text-white/40 uppercase tracking-widest mb-3">
