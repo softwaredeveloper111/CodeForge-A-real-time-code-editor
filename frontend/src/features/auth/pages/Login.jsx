@@ -144,19 +144,6 @@ const LoginPage = () => {
             >
               Sign In to Workspace
             </button>
-          
-
-          {/* Resend Verification Email — always visible, subtle */}
-<p className="text-center text-xs text-[#6f758b]">
-  Didn't receive a verification email?{" "}
-  <span
-    onClick={onResendEmail}
-    className="text-[#a3a6ff] hover:text-[#c180ff] cursor-pointer transition-colors"
-  >
-    Resend it
-  </span>
-</p>
-
 
           </form>
 

@@ -22,7 +22,7 @@ const RegisterPage = () => {
   const onSubmit = async (data) => {
     const res = await handleRegister(data);
     if (res.success) {
-      toast.success("Verification email sent! Please check your inbox.");
+      toast.success("Registration successful! You can now login.");
       navigate("/auth/login");
     } else {
       toast.error(res.message);

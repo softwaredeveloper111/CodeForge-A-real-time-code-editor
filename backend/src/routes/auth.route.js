@@ -1,8 +1,6 @@
 import express from 'express';
 import {
   registerController,
-  verifyEmailController ,
-  resendEmailController,
   loginController,
   logoutController,
    getMeController,
@@ -10,7 +8,6 @@ import {
 } from "../controllers/auth.controller.js";
 import { 
     registerValidator, 
-     resendEmailValidator,
       loginValidator
     } from "../validators/auth.validator.js";
 import identifyingUser from "../middlewares/auth.middleware.js";
@@ -30,25 +27,6 @@ const authRouter = express.Router();
  * @route /api/auth/register  
  */
 authRouter.post('/register', registerValidator, registerController)
-
-
-
-/**
- * @method GET
- * @description    verify the email
- * @route         /api/auth/verify-email
- */
-authRouter.get('/verify-email', verifyEmailController )
-
-
-
-/**
- * @method         POST
- * @descritpion   resend the email
- * @route          /api/auth/resend-email
- */
-
-authRouter.post("/resend-email", resendEmailValidator , resendEmailController )
 
 
 

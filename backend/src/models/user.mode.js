@@ -51,16 +51,7 @@ const userSchema = new mongoose.Schema(
       default:
         "https://ik.imagekit.io/a490stdk4/stylish-spectacles-guy-3d-avatar-character-illustrations-png.webp?updatedAt=1770782847473",
     },
-    verified: {
-      type: Boolean,
-      default: false,
-    },
-    emailVerificationToken: {
-      type: String,
-    },
-    emailVerificationTokenExpires: {
-      type: Date,
-    },
+
   },
   { timestamps: true },
 );
