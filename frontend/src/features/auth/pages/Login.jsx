@@ -104,9 +104,7 @@ const LoginPage = () => {
                 <label className="text-xs uppercase tracking-widest text-[#6f758b]">
                   Password
                 </label>
-                <span className="text-xs text-[#a3a6ff] hover:text-[#c180ff] cursor-pointer">
-                  Forgot password?
-                </span>
+        
               </div>
               <div className="relative group">
                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#6f758b] group-focus-within:text-[#a3a6ff]">
@@ -170,15 +168,7 @@ const LoginPage = () => {
             </span>
           </div>
 
-          {/* Google Button */}
-          <button className="w-full py-3.5 rounded-xl flex items-center justify-center gap-3 bg-[#222b47]/50 border border-[#41475b] hover:bg-[#222b47] transition">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6tSeGwQYsvN43tCFiSvZdeXUQXMYC1kz8ToqiZYVFA9-7cfyHEYhalbFpYubkBGtkVasmUyMcotatc_bfaymoe-CJ8uYUgpCkYg0l48xahAnrC_ljOohIlioatRoqvCgVQeLEecWjzBuXFf8RLGEEnGGBWuiHZofF3QsfbpIOMxzmF9N_hjKwoGrSDCn0MgwyB5rFzxyR4TjpbIY7V-KyADQWlUv5buZHACy4E_sOe1dCvjxACQf9SvZELWd5JISmtkcqpW1Pbymc"
-              className="w-5 h-5"
-              alt="google"
-            />
-            <span className="text-sm">Continue with Google</span>
-          </button>
+  
 
           {/* Footer */}
           <div className="mt-8 text-center text-sm text-[#a5aac2]">

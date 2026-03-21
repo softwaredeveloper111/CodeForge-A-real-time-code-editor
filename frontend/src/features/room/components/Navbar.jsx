@@ -86,15 +86,13 @@ const Navbar = () => {
           <Link to="/user/works" className="text-[#dfe4fe]/60 hover:text-white">
             Works
           </Link>
-          <a className="text-[#dfe4fe]/60 hover:text-white">Team</a>
-          <a className="text-[#dfe4fe]/60 hover:text-white">Docs</a>
+          <Link to="/team" className="text-[#dfe4fe]/60 hover:text-white">Team</Link>
+          <Link to="/docs" className="text-[#dfe4fe]/60 hover:text-white">Docs</Link>
         </div>
       </div>
 
       {/* RIGHT */}
       <div className="flex items-center gap-4">
-        <button className="p-2 rounded-xl hover:bg-[#222b47]">🔔</button>
-        <button className="p-2 rounded-xl hover:bg-[#222b47]">⚙️</button>
 
         {/* AVATAR + DROPDOWN */}
         <div className="relative" ref={dropdownRef}>

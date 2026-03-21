@@ -2,7 +2,16 @@ import React, { useEffect, useState } from "react";
 import useRoom from "../hooks/useRoom";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import CreateRoomModal from "../components/CreateRoomModal";
+
+
+const timeAgo = (dateStr) => {
+  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (diff < 60) return "just now";
+  if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+  return new Date(dateStr).toLocaleDateString();
+};
 
 const MyRooms = () => {
   const { handleUserRoomList, handleLeaveRoom, handledeleteRoom } = useRoom();
@@ -46,12 +55,11 @@ const MyRooms = () => {
 
       {/* SIDEBAR */}
       <aside className="w-64 bg-[#11192e] border-r border-white/10 p-6 hidden md:flex flex-col">
-        <Link className="text-indigo-400 text-xl font-bold mb-6">Workspace</Link>
+        <Link to="/" className="text-indigo-400 text-xl font-bold mb-6">Workspace</Link>
 
         <div className="flex flex-col gap-4 text-white/60">
           <button className="text-indigo-400 text-left">Projects</button>
-          <button className="hover:text-white text-left">Storage</button>
-          <button className="hover:text-white text-left">History</button>
+    
         </div>
 
         <div className="mt-auto text-xs text-white/40">© CodeForge</div>
@@ -69,13 +77,6 @@ const MyRooms = () => {
               high-performance virtual environments.
             </p>
           </div>
-
-          <button
-            onClick={() => setOpenModal(true)}
-            className="px-6 py-3 cursor-pointer rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 font-semibold"
-          >
-            + Create Room
-          </button>
         </div>
 
         {/* ROOMS GRID */}
@@ -146,7 +147,7 @@ const MyRooms = () => {
                     {/* LAST UPDATED */}
                     <div className="text-right">
                       <p className="text-xs text-white/50">Last Updated</p>
-                      <p className="text-sm text-white/70">Recently</p>
+                      <p className="text-sm text-white/70">{timeAgo(room.updatedAt)}</p>
                     </div>
                   </div>
 
@@ -191,7 +192,7 @@ const MyRooms = () => {
         )}
       </div>
 
-      <CreateRoomModal isOpen={openModal} onClose={() => setOpenModal(false)} />
+      
 
     </div>
   );

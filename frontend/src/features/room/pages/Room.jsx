@@ -10,6 +10,13 @@ import ChatPanel from "../../chat/components/chatPanel";
 import OutputPanel from "../../code/components/OutputPanel.jsx";
 import useCode from "../../code/hooks/useCode.js";
 
+const BOILERPLATE = {
+  javascript: `// JavaScript\nconsole.log("Hello, World!");`,
+  python:     `# Python\nprint("Hello, World!")`,
+  cpp:        `#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}`,
+  java:       `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`,
+};
+
 const Room = () => {
   const { roomId } = useParams();
   const dispatch = useDispatch();
@@ -30,9 +37,17 @@ const Room = () => {
     const fetchRoom = async () => {
       const res = await getRoomApi(roomId);
       if (res?.data?.participants) setUsers(res.data.participants);
-      if (res?.data?.code)        setCode(res.data.code);
       if (res?.data?.language)    setLanguage(res.data.language);
-      if (res?.data?.isSolo !== undefined) setIsSolo(res.data.isSolo); // ✅ only new line
+      if (res?.data?.isSolo !== undefined) setIsSolo(res.data.isSolo);
+
+      // ✅ agar code saved hai to woh, warna language ka boilerplate
+      const savedCode = res?.data?.code;
+      const lang = res?.data?.language || "javascript";
+      if (savedCode && savedCode.trim() !== "" && savedCode.trim() !== "// Start coding...") {
+        setCode(savedCode);
+      } else {
+        setCode(BOILERPLATE[lang] || BOILERPLATE["javascript"]);
+      }
     };
     fetchRoom();
   }, [roomId]);
@@ -116,6 +131,13 @@ const Room = () => {
           )}
         </button>
       </div>
+
+      {/* ── JAVA WARNING ── */}
+      {language === "java" && (
+        <div className="bg-yellow-500/10 border-b border-yellow-500/30 px-4 py-1.5 text-yellow-400 text-xs text-center shrink-0">
+          ⚠️ Java: class name hamesha <code className="font-mono bg-yellow-500/20 px-1 rounded">public class Main</code> hona chahiye — Judge0 file ko <code className="font-mono bg-yellow-500/20 px-1 rounded">Main.java</code> save karta hai.
+        </div>
+      )}
 
       {/* ── MAIN AREA ── */}
       <div className="flex flex-1 overflow-hidden">

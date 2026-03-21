@@ -52,8 +52,8 @@ const RegisterPage = () => {
       <main className="relative z-10 w-full max-w-[540px] p-6">
         <div className="bg-[rgba(28,37,62,0.6)] backdrop-blur-[24px] border border-[#6f758b]/20 rounded-xl p-8 md:p-12 flex flex-col items-center">
           {/* Header */}
-          <div className="text-center mb-10">
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-tr from-[#a3a6ff] to-[#c180ff] flex items-center justify-center mb-6">
+          <div className="text-center flex flex-col items-center mb-10">
+            <div className="w-14 text-center  h-14 rounded-xl bg-gradient-to-tr from-[#a3a6ff] to-[#c180ff] flex items-center justify-center mb-6">
               <span className="material-symbols-outlined text-3xl text-black">
                 terminal
               </span>
@@ -194,32 +194,8 @@ const RegisterPage = () => {
               </Link>
             </p>
 
-            {/* Divider */}
-            <div className="flex items-center gap-4 w-full opacity-50">
-              <div className="h-[1px] bg-[#41475b] flex-grow" />
-              <span className="text-[10px] uppercase tracking-[0.2em] text-[#6f758b]">
-                Architect Identity
-              </span>
-              <div className="h-[1px] bg-[#41475b] flex-grow" />
-            </div>
 
-            {/* Social */}
-            <div className="flex gap-4">
-              <button className="w-12 h-12 rounded-lg bg-[#11192e] flex items-center justify-center border border-[#41475b]/30 hover:bg-[#222b47]">
-                <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6gxgHAcD0qzCXJlhJrMy9AwOlfMi8KpQKt3QFVSPy-UgPKsuK1Qo5v_zKRXB9-lo4mybyeZ6ChyI17qIQiEgWvgrOE4cd-MadTxTB3AQ2m6a-LFWDj1C18zkbeVGtGQIjLStPbsxx9qNqvarVqU9U7JCX3P-lV7kwC17rNPUARlfswVLRLf75V6AxzLfVhzV_QVUIKg5WEcH5bECP8k_EvADb8Rj-3lNoS4QiPbGjSGEtnwCpQT55Vnl0ELnnIJkkS6qxB-4zPbNK"
-                  className="w-5 h-5"
-                  alt="github"
-                />
-              </button>
-              <button className="w-12 h-12 rounded-lg bg-[#11192e] flex items-center justify-center border border-[#41475b]/30 hover:bg-[#222b47]">
-                <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcoBgH7iIQNfq9bUMrRJpqczQ9Xt-OZ1R5-j4u3JX9JXhqazh4fvHo1UjzPIBHnlQ9uKTVgsrvxj06Q7hKVId7jTTZOzgiTKMyX0R1DFj7ERt8rvU15rxhK32i0RsYeD9I6yx9wRhuBs8KL44LpVeJ46OOvhueO1xWcQleWzeu5llPB026sbuY08YqSxYkb4vJ89VuRUeyKbq_52VDzYWlFAuvlhh-c9BCWRGN8ah07-4n8qt1P67FQ8N6YancLM-CMinAwXUrEmhG"
-                  className="w-5 h-5"
-                  alt="google"
-                />
-              </button>
-            </div>
+        
           </div>
         </div>
       </main>

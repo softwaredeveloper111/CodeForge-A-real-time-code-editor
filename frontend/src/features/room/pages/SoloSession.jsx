@@ -115,9 +115,7 @@ const SessionCard = ({ room, onContinue }) => {
             <h3 className={`text-xl font-bold truncate ${config.color}`}>
               {room.name}
             </h3>
-            <span className="text-[10px] uppercase tracking-widest text-slate-500 shrink-0">
-              ID: {room.roomId}
-            </span>
+            
           </div>
 
           <CodePreview code={room.code} language={room.language} />
@@ -158,9 +156,7 @@ const Sidebar = () => (
     <nav className="flex flex-col gap-6 items-center flex-1">
       {[
         { icon: "💻", label: "Editor", active: true },
-        { icon: "🗄️", label: "Repository" },
-        { icon: "🚀", label: "Deployment" },
-        { icon: "📊", label: "Analytics" },
+    
       ].map(({ icon, label, active }) => (
         <button
           key={label}
@@ -178,18 +174,7 @@ const Sidebar = () => (
       ))}
     </nav>
 
-    <div className="flex flex-col gap-2 items-center mt-auto w-full">
-      <div className="px-4 w-full flex flex-col items-center gap-2 mb-4">
-        <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse" />
-        <div className="h-24 w-1 bg-slate-800 rounded-full relative overflow-hidden">
-          <div className="absolute bottom-0 w-full bg-indigo-500 h-[20%]" />
-        </div>
-      </div>
-      <button className="group relative text-slate-500 hover:text-slate-300 p-3 w-20 flex justify-center hover:bg-[#222b47] transition-all">
-        <span className="text-xl">❓</span>
-        <span className="absolute left-full ml-4 px-2 py-1 bg-[#222b47] text-xs rounded opacity-0 group-hover:opacity-100 whitespace-nowrap z-50 pointer-events-none">Support</span>
-      </button>
-    </div>
+
   </aside>
 );
 
