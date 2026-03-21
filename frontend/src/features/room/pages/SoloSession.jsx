@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 
 // ─── Static mock data ───────────────────────────────────────────────────────
 const MOCK_SESSIONS = [
@@ -116,30 +116,9 @@ const Sidebar = () => (
 const Topbar = () => (
   <header className="flex justify-between items-center w-full px-8 h-16 border-b border-slate-800/50 bg-[#070d1f] sticky top-0 z-40">
     <div className="flex items-center gap-8 flex-1">
-      <span className="text-xl font-black text-indigo-400 tracking-tight">CodeForge</span>
-      <div className="relative w-full max-w-md">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">🔍</span>
-        <input
-          className="w-full bg-[#11192e] border-none rounded-xl py-2 pl-10 pr-4 text-sm text-slate-200 focus:ring-2 focus:ring-indigo-500/50 placeholder:text-slate-600 outline-none transition-all"
-          placeholder="Search sessions, files, or repositories..."
-          type="text"
-        />
-      </div>
+      <Link to="/" className="text-xl font-black text-indigo-400 tracking-tight">CodeForge</Link>
     </div>
 
-    <div className="flex items-center gap-4">
-      <button className="p-2 text-slate-400 hover:bg-[#222b47] rounded-lg transition-colors">🔔</button>
-      <button className="p-2 text-slate-400 hover:bg-[#222b47] rounded-lg transition-colors">⚙️</button>
-      <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 p-[2px]">
-        <div className="h-full w-full rounded-full bg-[#070d1f] overflow-hidden">
-          <img
-            src="https://i.pravatar.cc/100"
-            alt="avatar"
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </div>
-    </div>
   </header>
 );
 
@@ -219,13 +198,6 @@ const SoloSessions = () => {
               </p>
             </div>
 
-            <button
-              onClick={() => {}} // functionality baad mein
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/20 active:scale-95 transition-all"
-            >
-              <span>+</span>
-              <span>New Solo Session</span>
-            </button>
           </div>
 
           {/* Session Cards */}

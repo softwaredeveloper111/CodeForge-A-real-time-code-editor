@@ -5,7 +5,7 @@ import crypto from "crypto";
 import sendEmail from "../services/mail.service.js";
 import jwt from "jsonwebtoken";
 import redis from "../config/redis.connection.js";
-
+import uploadFileToImageKIT  from "../services/Imagekit.service.js";
 
 
 
@@ -281,4 +281,34 @@ export const  getMeController= asyncWrapper(async(req,res)=>{
     success:true,
     data:user
   })
+})
+
+
+
+
+
+
+
+
+export const updateProfileController = asyncWrapper(async(req,res)=>{
+  
+  const userId = req.user.id;
+  const buffer = req.file.buffer;
+
+  console.log(buffer)
+  if(!buffer){
+    throw new AppError("file not found",404);
+  }
+  const { thumbnailUrl} =  await uploadFileToImageKIT(buffer)
+  // console.log(thumbnailUrl)
+
+
+  const user = await userModel.findByIdAndUpdate(userId,{avatar:thumbnailUrl},{new:true})
+  res.status(200).json({
+    success:true,
+    message:"profile updated successfully",
+    data:user
+  })
+  
+ 
 })

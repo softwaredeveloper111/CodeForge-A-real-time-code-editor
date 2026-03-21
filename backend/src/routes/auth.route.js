@@ -5,7 +5,8 @@ import {
   resendEmailController,
   loginController,
   logoutController,
-   getMeController
+   getMeController,
+   updateProfileController
 } from "../controllers/auth.controller.js";
 import { 
     registerValidator, 
@@ -13,7 +14,7 @@ import {
       loginValidator
     } from "../validators/auth.validator.js";
 import identifyingUser from "../middlewares/auth.middleware.js";
-
+import upload from "../utils/multer.upload.js";
 
 
 
@@ -85,6 +86,27 @@ authRouter.post("/logout" ,  logoutController)
  * @route       /api/auth/me
  */
 authRouter.get("/me", identifyingUser , getMeController )
+
+
+
+
+
+
+
+/**
+ * @method   PATCH
+ * @description user can update their profile
+ * @route     /api/auth/me/profile
+ */
+
+authRouter.patch("/profile/update", identifyingUser , upload.single('avatar') ,updateProfileController )
+
+
+
+
+
+
+
 
 
 
