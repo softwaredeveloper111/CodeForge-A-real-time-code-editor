@@ -20,7 +20,7 @@ initSocket(server)
 
 /** application middleware */
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://codeforge-a-real-time-code-editor.onrender.com',
     credentials: true,
 }));
 app.use(cookieParser());
