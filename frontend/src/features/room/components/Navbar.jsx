@@ -88,6 +88,7 @@ const Navbar = () => {
           </Link>
           <Link to="/team" className="text-[#dfe4fe]/60 hover:text-white">Team</Link>
           <Link to="/docs" className="text-[#dfe4fe]/60 hover:text-white">Docs</Link>
+          <Link to="/web-editor" className="text-[#dfe4fe]/60 hover:text-white"> Web IDE</Link>
         </div>
       </div>
 

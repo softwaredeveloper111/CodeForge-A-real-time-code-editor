@@ -9,6 +9,7 @@ import MyRooms from "./features/room/pages/MyRoom";
 import SoloSession from "./features/room/pages/SoloSession";
  import TeamPage from "./features/room/pages/TeamPage";
 import DocsPage from "./features/room/pages/DocsPage";
+import WebEditor from "./features/webeditor/pages/WebEditor";
 
 
 const AppRouter = () => {
@@ -74,6 +75,7 @@ const AppRouter = () => {
 
 <Route path="/team" element={<Protected><TeamPage /></Protected>} />
 <Route path="/docs" element={<Protected><DocsPage /></Protected>} />
+<Route path="/web-editor" element={<Protected><WebEditor /></Protected>} />
 
 
       {/* Catch-all → redirect to home (Protected will handle from there) */}
