@@ -7,7 +7,7 @@ let io;
 export const initSocket = (server) => {
   io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // ✅ exact origin
+    origin: "https://codeforge-a-real-time-code-editor.onrender.com", // ✅ exact origin
     credentials: true,               // ✅ yeh bhi add kar
   },
 });

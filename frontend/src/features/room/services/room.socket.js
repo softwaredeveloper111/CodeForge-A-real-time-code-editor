@@ -5,7 +5,7 @@ let socket;
 
 export const getSocket = () => {
   if (!socket) {
-    socket = io("http://localhost:3000", {
+    socket = io("https://codeforge-a-real-time-code-editor.onrender.com", {
       withCredentials: true,
     });
 
