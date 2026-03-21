@@ -98,7 +98,7 @@ export const verifyEmailController = asyncWrapper(async(req,res)=>{
         <div class="container">
           <h1>✓ Email Already Verified</h1>
           <p>Your email has already been verified. You can log in to your account.</p>
-          <a href="http://localhost:5173/auth/login" class="button">Go to Login</a>
+          <a href="https://codeforge-a-real-time-code-editor.onrender.com/auth/login" class="button">Go to Login</a>
         </div>
       </body>
     </html>
