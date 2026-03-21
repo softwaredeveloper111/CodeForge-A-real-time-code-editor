@@ -234,8 +234,13 @@ export const  loginController = asyncWrapper(async(req,res)=>{
 
  
   
-  const token = jwt.sign({id:user._id,username:user.username}, process.env.JWT_SECRET_KEY,{expiresIn:"7d"})
-  res.cookie("JWT_TOKEN",token)
+  const token = jwt.sign({id:user._id,username:user.username}, process.env.JWT_SECRET_KEY)
+res.cookie("JWT_TOKEN", token, {
+  httpOnly: true,
+  secure: true,                  
+  sameSite: "none",              
+  maxAge: 7 * 24 * 60 * 60 * 1000  
+});
 
    const userObj = user.toObject();
   delete userObj.password
@@ -259,7 +264,11 @@ export const logoutController = asyncWrapper(async(req,res)=>{
   if(token){
    await redis.set(token,Date.now().toString(),"EX",60*60)
   }
-  res.clearCookie("JWT_TOKEN");
+  res.clearCookie("JWT_TOKEN", {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+});
   res.status(200).json({
     success:true,
     message:"user logged out successfully"
