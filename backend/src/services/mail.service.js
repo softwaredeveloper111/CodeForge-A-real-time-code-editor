@@ -68,7 +68,7 @@ const sendEmail = async ({ to, subject, text, html }) => {
   try {
     await resend.emails.send({
       from: "CodeForge <onboarding@resend.dev>",
-      to,
+      to:[to],
       subject,
       html,
     });
