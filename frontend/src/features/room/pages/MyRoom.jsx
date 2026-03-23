@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useRoom from "../hooks/useRoom";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import { toast } from "react-toastify";
 
 const timeAgo = (dateStr) => {
   const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -52,14 +52,14 @@ const MyRooms = () => {
 
   return (
     <div className="min-h-screen bg-[#070d1f] text-white flex">
-
       {/* SIDEBAR */}
       <aside className="w-64 bg-[#11192e] border-r border-white/10 p-6 hidden md:flex flex-col">
-        <Link to="/" className="text-indigo-400 text-xl font-bold mb-6">Workspace</Link>
+        <Link to="/" className="text-indigo-400 text-xl font-bold mb-6">
+          Workspace
+        </Link>
 
         <div className="flex flex-col gap-4 text-white/60">
           <button className="text-indigo-400 text-left">Projects</button>
-    
         </div>
 
         <div className="mt-auto text-xs text-white/40">© CodeForge</div>
@@ -67,7 +67,6 @@ const MyRooms = () => {
 
       {/* MAIN */}
       <div className="flex-1 p-10">
-
         {/* HEADER */}
         <div className="flex justify-between items-center mb-12">
           <div>
@@ -103,8 +102,17 @@ const MyRooms = () => {
                       <h2 className="text-2xl font-bold">
                         {room.name || "Untitled Room"}
                       </h2>
-                      <p className="text-xs text-white/40 mt-1">
+                      <p className="text-xs text-white/40 mt-1 flex items-center gap-2">
                         ID: {room.roomId}
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(room.roomId);
+                            toast.success("Room ID copied!");
+                          }}
+                          className="text-[10px] px-2 py-0.5 rounded  bg-white/10 hover:bg-indigo-500/30 text-white/50 hover:text-indigo-300 transition cursor-pointer"
+                        >
+                          Copy
+                        </button>
                       </p>
                     </div>
 
@@ -116,7 +124,6 @@ const MyRooms = () => {
                   {/* USERS + META */}
                   <div className="flex justify-between items-center mb-8">
                     <div className="flex items-center gap-4">
-
                       {/* AVATAR STACK */}
                       <div className="flex -space-x-3">
                         {visibleUsers.map((user, index) => (
@@ -147,7 +154,9 @@ const MyRooms = () => {
                     {/* LAST UPDATED */}
                     <div className="text-right">
                       <p className="text-xs text-white/50">Last Updated</p>
-                      <p className="text-sm text-white/70">{timeAgo(room.updatedAt)}</p>
+                      <p className="text-sm text-white/70">
+                        {timeAgo(room.updatedAt)}
+                      </p>
                     </div>
                   </div>
 
@@ -158,7 +167,6 @@ const MyRooms = () => {
                     </span>
 
                     <div className="flex items-center gap-2">
-
                       {/* ✅ Creator → Shutdown | Participant → Leave */}
                       {isCreator ? (
                         <button
@@ -182,7 +190,6 @@ const MyRooms = () => {
                       >
                         Join Room →
                       </button>
-
                     </div>
                   </div>
                 </div>
@@ -191,9 +198,6 @@ const MyRooms = () => {
           </div>
         )}
       </div>
-
-      
-
     </div>
   );
 };

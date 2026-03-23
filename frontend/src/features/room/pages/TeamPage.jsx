@@ -6,44 +6,9 @@ const TEAM = [
     name: "Sourav Giri",
     role: "Co-Founder & CEO",
     bio: "Visionary behind CodeForge. Loves distributed systems.",
-    skills: ["Leadership", "System Design", "RAG"],
+    skills: ["Leadership", "System Design", "RAG", "backend", "scalable system"],
     avatar: "https://ik.imagekit.io/a490stdk4/FB_IMG_1675573988384.jpg",
-  },
-  {
-    name: "Priya Sharma",
-    role: "Lead Frontend Engineer",
-    bio: "Crafts pixel-perfect UIs. React wizard and design system enthusiast.",
-    skills: ["React", "TailwindCSS", "Figma"],
-    avatar: "https://i.pravatar.cc/150?img=47",
-  },
-  {
-    name: "Ravi Nair",
-    role: "Backend Architect",
-    bio: "Keeps the servers happy. Node.js and Kafka are his playgrounds.",
-    skills: ["Node.js", "MongoDB", "Kafka"],
-    avatar: "https://i.pravatar.cc/150?img=15",
-  },
-  {
-    name: "Sneha Iyer",
-    role: "DevOps Engineer",
-    bio: "Ships fast, breaks nothing. CI/CD pipelines are her art form.",
-    skills: ["Docker", "AWS", "GitHub Actions"],
-    avatar: "https://i.pravatar.cc/150?img=45",
-  },
-  {
-    name: "Dev Kapoor",
-    role: "AI/ML Engineer",
-    bio: "Bringing intelligence to code. Loves LLMs and Python notebooks.",
-    skills: ["Python", "TensorFlow", "LangChain"],
-    avatar: "https://i.pravatar.cc/150?img=12",
-  },
-  {
-    name: "Meera Joshi",
-    role: "Product Designer",
-    bio: "Turns complex flows into simple, beautiful experiences.",
-    skills: ["UX Research", "Figma", "Prototyping"],
-    avatar: "https://i.pravatar.cc/150?img=44",
-  },
+  }
 ];
 
 const TeamPage = () => {
