@@ -40,10 +40,9 @@ app.use("/api/code",codeRouter)
 
 
 
-app.get("/{*path}", (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, "../public", "index.html"));
 });
-
 
 
 
