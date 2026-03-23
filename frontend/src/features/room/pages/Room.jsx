@@ -23,7 +23,7 @@ const Room = () => {
 
   const user = useSelector((state) => state.authentication.user);
 
-  const [code, setCode] = useState("// Start coding...");
+  const [code, setCode] = useState("");
   const [users, setUsers] = useState([]);
   const [language, setLanguage] = useState("javascript");
   const [isSolo, setIsSolo] = useState(false);
@@ -36,7 +36,7 @@ const Room = () => {
   useEffect(() => {
     const fetchRoom = async () => {
       const res = await getRoomApi(roomId);
-      if (res?.data?.participants) setUsers(res.data.participants);
+      if (res?.data?.participants) setUsers(res.data.participants ?? []);
       if (res?.data?.language)    setLanguage(res.data.language);
       if (res?.data?.isSolo !== undefined) setIsSolo(res.data.isSolo);
 
@@ -174,7 +174,7 @@ const Room = () => {
             <Editor
               height="100%"
               language={language}
-              value={code}
+              value={code ?? ""}
               theme="vs-dark"
               onChange={handleChange}
               options={{
