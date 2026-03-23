@@ -10,8 +10,6 @@ import ChatPanel from "../../chat/components/chatPanel";
 import OutputPanel from "../../code/components/OutputPanel.jsx";
 import useCode from "../../code/hooks/useCode.js";
 
-
-
 const BOILERPLATE = {
   javascript: `// JavaScript\nconsole.log("Hello, World!");`,
   python:     `# Python\nprint("Hello, World!")`,
@@ -23,15 +21,12 @@ const Room = () => {
   const { roomId } = useParams();
   const dispatch = useDispatch();
 
-
-
   const user = useSelector((state) => state.authentication.user);
 
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState("// Start coding...");
   const [users, setUsers] = useState([]);
   const [language, setLanguage] = useState("javascript");
   const [isSolo, setIsSolo] = useState(false);
-  const [roomLoading, setRoomLoading] = useState(true);
 
   const isRemoteChange = useRef(false);
 
@@ -40,27 +35,20 @@ const Room = () => {
   // ── Fetch room details (participants + saved code + language) ──
   useEffect(() => {
     const fetchRoom = async () => {
-  try {
-    const res = await getRoomApi(roomId);
-    console.log("API res:", res); // debug
-    if (res?.data?.participants) setUsers(res.data.participants ?? []);
-    if (res?.data?.language)    setLanguage(res.data.language);
-    if (res?.data?.isSolo !== undefined) setIsSolo(res.data.isSolo);
+      const res = await getRoomApi(roomId);
+      if (res?.data?.participants) setUsers(res.data.participants);
+      if (res?.data?.language)    setLanguage(res.data.language);
+      if (res?.data?.isSolo !== undefined) setIsSolo(res.data.isSolo);
 
-    const savedCode = res?.data?.code;
-    const lang = res?.data?.language || "javascript";
-    if (savedCode && savedCode.trim() !== "" && savedCode.trim() !== "// Start coding...") {
-      setCode(savedCode);
-    } else {
-      setCode(BOILERPLATE[lang] || BOILERPLATE["javascript"]);
-    }
-  } catch (err) {
-    console.error("fetchRoom failed:", err);
-    setCode(BOILERPLATE["javascript"]); // fallback
-  } finally {
-    setRoomLoading(false); // ✅ hamesha false karo
-  }
-};
+      // ✅ agar code saved hai to woh, warna language ka boilerplate
+      const savedCode = res?.data?.code;
+      const lang = res?.data?.language || "javascript";
+      if (savedCode && savedCode.trim() !== "" && savedCode.trim() !== "// Start coding...") {
+        setCode(savedCode);
+      } else {
+        setCode(BOILERPLATE[lang] || BOILERPLATE["javascript"]);
+      }
+    };
     fetchRoom();
   }, [roomId]);
 
@@ -74,12 +62,12 @@ const Room = () => {
 
     socket.on("sync-code", (incomingCode) => {
       isRemoteChange.current = true;
-        setCode(incomingCode ?? "");
+      setCode(incomingCode);
     });
 
     socket.on("code-update", (incomingCode) => {
       isRemoteChange.current = true;
-       setCode(incomingCode ?? "");
+      setCode(incomingCode);
     });
 
     socket.on("user-joined", (newUser) => {
@@ -181,31 +169,27 @@ const Room = () => {
         )}
 
         {/* EDITOR + OUTPUT PANEL */}
-       <div className="flex-1 flex flex-col overflow-hidden">
-        
-  <div className="flex-1 overflow-hidden">
-   {roomLoading || !language || code === "" ? (
-  <div className="flex items-center justify-center h-full bg-[#1e1e1e]">
-    <div className="w-8 h-8 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
-  </div>
-)  : (
-      <Editor
-       key={language}
-        height="100%"
-        language={language}
-        value={code ?? ""}
-        theme="vs-dark"
-        onChange={handleChange}
-        options={{
-          minimap: { enabled: false },
-          fontSize: 14,
-        }}
-      />
-    )}
-  </div>
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 overflow-hidden">
+            <Editor
+              height="100%"
+              language={language}
+              value={code}
+              theme="vs-dark"
+              onChange={handleChange}
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+              }}
+            />
+          </div>
 
-  <OutputPanel output={output} isRunning={isRunning} error={error} />
-</div>
+          <OutputPanel
+            output={output}
+            isRunning={isRunning}
+            error={error}
+          />
+        </div>
 
         {/* RIGHT CHAT — only for collaborative rooms */}
         {!isSolo && (
