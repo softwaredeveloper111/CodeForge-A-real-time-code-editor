@@ -184,12 +184,13 @@ const Room = () => {
        <div className="flex-1 flex flex-col overflow-hidden">
         
   <div className="flex-1 overflow-hidden">
-    {roomLoading ? (
-      <div className="flex items-center justify-center h-full">
-        <div className="w-8 h-8 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
-      </div>
-    ) : (
+   {roomLoading || !language || code === "" ? (
+  <div className="flex items-center justify-center h-full bg-[#1e1e1e]">
+    <div className="w-8 h-8 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+  </div>
+)  : (
       <Editor
+       key={language}
         height="100%"
         language={language}
         value={code ?? ""}
