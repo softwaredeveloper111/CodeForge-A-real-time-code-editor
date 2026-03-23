@@ -74,12 +74,12 @@ const Room = () => {
 
     socket.on("sync-code", (incomingCode) => {
       isRemoteChange.current = true;
-      setCode(incomingCode);
+        setCode(incomingCode ?? "");
     });
 
     socket.on("code-update", (incomingCode) => {
       isRemoteChange.current = true;
-      setCode(incomingCode);
+       setCode(incomingCode ?? "");
     });
 
     socket.on("user-joined", (newUser) => {
