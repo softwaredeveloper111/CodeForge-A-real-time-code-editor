@@ -10,6 +10,8 @@ import ChatPanel from "../../chat/components/chatPanel";
 import OutputPanel from "../../code/components/OutputPanel.jsx";
 import useCode from "../../code/hooks/useCode.js";
 
+
+
 const BOILERPLATE = {
   javascript: `// JavaScript\nconsole.log("Hello, World!");`,
   python:     `# Python\nprint("Hello, World!")`,
@@ -21,12 +23,15 @@ const Room = () => {
   const { roomId } = useParams();
   const dispatch = useDispatch();
 
+
+
   const user = useSelector((state) => state.authentication.user);
 
   const [code, setCode] = useState("");
   const [users, setUsers] = useState([]);
   const [language, setLanguage] = useState("javascript");
   const [isSolo, setIsSolo] = useState(false);
+  const [roomLoading, setRoomLoading] = useState(true);
 
   const isRemoteChange = useRef(false);
 
@@ -48,6 +53,7 @@ const Room = () => {
       } else {
         setCode(BOILERPLATE[lang] || BOILERPLATE["javascript"]);
       }
+        setRoomLoading(false); 
     };
     fetchRoom();
   }, [roomId]);
@@ -169,27 +175,30 @@ const Room = () => {
         )}
 
         {/* EDITOR + OUTPUT PANEL */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 overflow-hidden">
-            <Editor
-              height="100%"
-              language={language}
-              value={code ?? ""}
-              theme="vs-dark"
-              onChange={handleChange}
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-              }}
-            />
-          </div>
+       <div className="flex-1 flex flex-col overflow-hidden">
+        
+  <div className="flex-1 overflow-hidden">
+    {roomLoading ? (
+      <div className="flex items-center justify-center h-full">
+        <div className="w-8 h-8 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+      </div>
+    ) : (
+      <Editor
+        height="100%"
+        language={language}
+        value={code ?? ""}
+        theme="vs-dark"
+        onChange={handleChange}
+        options={{
+          minimap: { enabled: false },
+          fontSize: 14,
+        }}
+      />
+    )}
+  </div>
 
-          <OutputPanel
-            output={output}
-            isRunning={isRunning}
-            error={error}
-          />
-        </div>
+  <OutputPanel output={output} isRunning={isRunning} error={error} />
+</div>
 
         {/* RIGHT CHAT — only for collaborative rooms */}
         {!isSolo && (
