@@ -38,7 +38,12 @@ app.use("/api/messages",messageRouter )
 app.use("/api/code",codeRouter)
 
 
-
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api") || req.path.startsWith("/socket.io")) {
+    return next(); // ✅ API calls pass karo
+  }
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
+});
 
 
 
