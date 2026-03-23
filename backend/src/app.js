@@ -9,11 +9,15 @@ import roomRouter from "./routes/room.route.js";
 import messageRouter from "./routes/message.route.js";
 import codeRouter from "./routes/code.route.js";
 import { initSocket } from "./sockets/index.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 
 
 const app = express();
 const server = createServer(app);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename)
 initSocket(server)
 
 
@@ -36,7 +40,9 @@ app.use("/api/code",codeRouter)
 
 
 
-
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
+});
 
 
 
