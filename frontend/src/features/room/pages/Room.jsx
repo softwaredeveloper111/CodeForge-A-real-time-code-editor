@@ -40,21 +40,27 @@ const Room = () => {
   // ── Fetch room details (participants + saved code + language) ──
   useEffect(() => {
     const fetchRoom = async () => {
-      const res = await getRoomApi(roomId);
-      if (res?.data?.participants) setUsers(res.data.participants ?? []);
-      if (res?.data?.language)    setLanguage(res.data.language);
-      if (res?.data?.isSolo !== undefined) setIsSolo(res.data.isSolo);
+  try {
+    const res = await getRoomApi(roomId);
+    console.log("API res:", res); // debug
+    if (res?.data?.participants) setUsers(res.data.participants ?? []);
+    if (res?.data?.language)    setLanguage(res.data.language);
+    if (res?.data?.isSolo !== undefined) setIsSolo(res.data.isSolo);
 
-      // ✅ agar code saved hai to woh, warna language ka boilerplate
-      const savedCode = res?.data?.code;
-      const lang = res?.data?.language || "javascript";
-      if (savedCode && savedCode.trim() !== "" && savedCode.trim() !== "// Start coding...") {
-        setCode(savedCode);
-      } else {
-        setCode(BOILERPLATE[lang] || BOILERPLATE["javascript"]);
-      }
-        setRoomLoading(false); 
-    };
+    const savedCode = res?.data?.code;
+    const lang = res?.data?.language || "javascript";
+    if (savedCode && savedCode.trim() !== "" && savedCode.trim() !== "// Start coding...") {
+      setCode(savedCode);
+    } else {
+      setCode(BOILERPLATE[lang] || BOILERPLATE["javascript"]);
+    }
+  } catch (err) {
+    console.error("fetchRoom failed:", err);
+    setCode(BOILERPLATE["javascript"]); // fallback
+  } finally {
+    setRoomLoading(false); // ✅ hamesha false karo
+  }
+};
     fetchRoom();
   }, [roomId]);
 
